@@ -95,3 +95,41 @@ Build a full-stack MERN (MongoDB, Express.js, React.js, Node.js) application tha
      - Screenshots of the application
 6. Your submission will be automatically graded based on the criteria in the autograding configuration
 7. The instructor will review your submission after the autograding is complete 
+
+## Server Side (Node.js/Express)
+
+```
+server/
+  ├── config/         # Configuration files (DB, environment, etc.)
+  ├── controllers/    # Route controller functions
+  ├── middleware/     # Custom middleware (auth, error handling, etc.)
+  ├── models/         # Mongoose models (schemas)
+  ├── routes/         # Express route definitions
+  ├── utils/          # Utility/helper functions
+  ├── server.js       # Entry point for the server
+  └── .env            # Environment variables (not committed)
+```
+
+## Client Side (React)
+
+```
+client/
+  ├── public/         # Static files (index.html, favicon, etc.)
+  └── src/
+      ├── assets/         # Images, fonts, etc.
+      ├── components/     # Reusable React components
+      ├── pages/          # Page-level components (Home, Blog, etc.)
+      ├── services/       # API calls (e.g., axios setup)
+      ├── context/        # React context providers (if using context API)
+      ├── hooks/          # Custom React hooks
+      ├── App.js          # Main App component
+      ├── index.js        # Entry point for React
+      └── styles/         # CSS/SCSS files
+```
+
+### Next Steps
+
+- Would you like to update your current project structure to match this, or do you want to create any of these folders/files now?
+- Let me know if you want to add/change any sections based on your project's needs.
+
+Once you confirm, I can proceed to create the missing folders and add a changelog entry for this foundational setup. 
