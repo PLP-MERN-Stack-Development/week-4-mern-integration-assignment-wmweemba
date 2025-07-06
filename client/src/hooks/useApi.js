@@ -2,16 +2,31 @@ import { useState } from "react";
 
 const API_BASE = "/api";
 
+function buildQueryString(params) {
+  if (!params) return "";
+  const esc = encodeURIComponent;
+  return (
+    "?" +
+    Object.keys(params)
+      .map((k) => esc(k) + "=" + esc(params[k]))
+      .join("&")
+  );
+}
+
 export function useApi(endpoint, options = {}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = async (method = "GET", body = null, customEndpoint = null) => {
+  const fetchData = async (method = "GET", body = null, customEndpoint = null, query = null) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}${customEndpoint || endpoint}`, {
+      let url = `${API_BASE}${customEndpoint || endpoint}`;
+      if (method === "GET" && query) {
+        url += buildQueryString(query);
+      }
+      const res = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",

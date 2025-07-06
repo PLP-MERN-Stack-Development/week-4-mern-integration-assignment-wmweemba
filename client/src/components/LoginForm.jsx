@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
 
-const LoginForm = ({ onSuccess }) => {
+const LoginForm = () => {
   const { login, loading, error } = useAuth();
   const [form, setForm] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,7 +14,7 @@ const LoginForm = ({ onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const ok = await login(form);
-    if (ok && onSuccess) onSuccess();
+    if (ok) navigate("/posts"); // Redirect to posts page after login
   };
 
   return (
@@ -48,6 +50,10 @@ const LoginForm = ({ onSuccess }) => {
       >
         {loading ? "Logging in..." : "Login"}
       </button>
+      <div className="mt-4 text-center">
+        <span className="text-gray-600">Don't have an account? </span>
+        <Link to="/register" className="text-blue-600 hover:underline">Register here</Link>
+      </div>
     </form>
   );
 };

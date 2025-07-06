@@ -42,4 +42,9 @@ router.put('/:id', upload.single('image'), postUpdateValidator, handleValidation
 // DELETE /api/posts/:id
 router.delete('/:id', postController.deletePost);
 
+// Comments routes
+router.post('/:id/comments', postController.addComment);
+router.get('/:id/comments', postController.getComments);
+router.delete('/:id/comments/:commentId', postController.deleteComment);
+
 module.exports = router; 

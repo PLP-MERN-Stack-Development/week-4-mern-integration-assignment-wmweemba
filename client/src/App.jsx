@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate, Navigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import PostList from "@/components/PostList";
 import PostView from "@/components/PostView";

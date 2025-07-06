@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useApi } from "@/hooks/useApi";
+import { authService } from "@/services/api";
 
 const AuthContext = createContext();
 
@@ -32,12 +33,7 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error(await res.text());
+      await authService.register(data);
       return true;
     } catch (err) {
       setError(err.message || "Registration failed");
@@ -52,13 +48,7 @@ export function AuthProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const json = await res.json();
+      const json = await authService.login(data);
       setToken(json.token);
       setUser(json.user);
       return true;

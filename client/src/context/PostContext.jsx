@@ -8,13 +8,25 @@ export function usePosts() {
 }
 
 export function PostProvider({ children }) {
-  const { data: posts, loading, error, fetchData, setData } = useApi("/posts");
+  const { data, loading, error, fetchData, setData } = useApi("/posts");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [pages, setPages] = useState(1);
+  const [q, setQ] = useState("");
+  const [category, setCategory] = useState("");
+  const [author, setAuthor] = useState("");
 
-  // Fetch posts on mount
+  // Fetch posts on mount and when page/search/filter changes
   useEffect(() => {
-    fetchData();
+    fetchData("GET", null, null, { page, q, category, author }).then((res) => {
+      if (res) {
+        setData(res.posts);
+        setTotal(res.total);
+        setPages(res.pages);
+      }
+    });
     // eslint-disable-next-line
-  }, []);
+  }, [page, q, category, author]);
 
   // CRUD actions
   const createPost = async (post) => {
@@ -36,7 +48,7 @@ export function PostProvider({ children }) {
   };
 
   return (
-    <PostContext.Provider value={{ posts: posts || [], loading, error, createPost, updatePost, deletePost }}>
+    <PostContext.Provider value={{ posts: data || [], loading, error, createPost, updatePost, deletePost, page, setPage, total, pages, q, setQ, category, setCategory, author, setAuthor }}>
       {children}
     </PostContext.Provider>
   );

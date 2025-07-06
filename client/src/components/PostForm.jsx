@@ -1,44 +1,40 @@
 import React, { useState, useEffect } from "react";
+import { categoryService } from "@/services/api";
 
 const PostForm = ({ initialData = {}, onSubmit, loading }) => {
   const [title, setTitle] = useState(initialData.title || "");
   const [content, setContent] = useState(initialData.content || "");
   const [author, setAuthor] = useState(initialData.author || "");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(initialData.imageUrl || "");
+  const [category, setCategory] = useState(initialData.category || "");
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     setTitle(initialData.title || "");
     setContent(initialData.content || "");
     setAuthor(initialData.author || "");
-    setImagePreview(initialData.imageUrl || "");
-    setImage(null);
+    setCategory(initialData.category || "");
   }, [initialData]);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
-      reader.readAsDataURL(file);
-    } else {
-      setImagePreview("");
-    }
-  };
+  useEffect(() => {
+    // Fetch categories from backend
+    categoryService.getAllCategories().then((data) => {
+      setCategories(data || []);
+    });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("author", author);
-    if (image) formData.append("image", image);
-    onSubmit(formData);
+    const postData = {
+      title,
+      content,
+      author,
+      category,
+    };
+    onSubmit(postData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow max-w-xl mx-auto space-y-4" encType="multipart/form-data">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow max-w-xl mx-auto space-y-4">
       <h2 className="text-2xl font-bold mb-2">{initialData._id ? "Edit Post" : "Create Post"}</h2>
       <div>
         <label className="block mb-1 font-medium">Title</label>
@@ -69,16 +65,18 @@ const PostForm = ({ initialData = {}, onSubmit, loading }) => {
         />
       </div>
       <div>
-        <label className="block mb-1 font-medium">Featured Image</label>
-        <input
-          type="file"
-          accept="image/*"
+        <label className="block mb-1 font-medium">Category</label>
+        <select
           className="w-full border rounded px-3 py-2"
-          onChange={handleImageChange}
-        />
-        {imagePreview && (
-          <img src={imagePreview} alt="Preview" className="mt-2 max-h-48 rounded" />
-        )}
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+        >
+          <option value="">Select a category</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>{cat.name}</option>
+          ))}
+        </select>
       </div>
       <button
         type="submit"
